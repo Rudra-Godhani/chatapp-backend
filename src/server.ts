@@ -9,6 +9,7 @@ import chatRoutes from "./routes/chatRoutes";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import { Message } from "./models/Message";
+import { User } from "./models/User";
 
 const app = express();
 const PORT = process.env.PORT || 6000;
@@ -28,26 +29,62 @@ const io = new Server(server, {
     },
 });
 
+const messageRepository = AppDataSource.getRepository(Message);
+const userRepository = AppDataSource.getRepository(User);
+
+const userSocketMap = new Map<string, string>();
+
 io.on("connection", (socket) => {
-    console.log(`Connected: ${socket.id}`);
+    console.log(`****************************Connected: ${socket.id}`);
+
+    socket.on("userConnect", async (userId: string) => {
+        if (userId) {
+            userSocketMap.set(userId, socket.id);
+
+            await userRepository.update(
+                { id: userId },
+                { online: true }
+            );
+
+            io.emit("userStatus", { userId, online: true });
+        }
+    })
 
     socket.on("joinChat", (chatId) => {
         socket.join(chatId);
     });
 
     socket.on("sendMessage", async ({ chatId, senderId, content }) => {
-        const message =  AppDataSource.getRepository(Message).create({
+        const message = messageRepository.create({
             chat: { id: chatId },
             sender: { id: senderId },
             content,
         });
-        await AppDataSource.getRepository(Message).save(message);
+        await messageRepository.save(message);
 
         io.to(chatId).emit("receiveMessage", message);
     });
 
-    socket.on("disconnect", () => {
+    socket.on("disconnect", async () => {
         console.log("User disconnected:", socket.id);
+        let userId: string | undefined;
+        for (const [id, socketId] of userSocketMap.entries()) {
+            if (socketId === socket.id) {
+                userId = id;
+                break;
+            }
+        }
+
+        if (userId) {
+            await userRepository.update(
+              { id: userId },
+              { online: false }
+            );
+      
+            userSocketMap.delete(userId);
+      
+            io.emit("userStatus", { userId, online: false });
+          }
     });
 })
 
