@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { AppDataSource } from "../config/databaseConnection";
-import { User } from "../models/User";
 import { catchAsyncErrorHandler } from "../utils/catchAsyncErorrHandler";
 import { validate } from "class-validator";
 import { ErrorHandler } from "../middleware/errorHandler";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { User } from "../models/User";
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -74,11 +74,13 @@ export const register = catchAsyncErrorHandler(
 export const login = catchAsyncErrorHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { email, password } = req.body;
+        console.log("Login request received:", { email, password });
 
         const userToValidate = userRepository.create({
             email,
             password,
         });
+        console.log("User to validate:", userToValidate);
         const validationErrors = await validate(userToValidate, {
             skipMissingProperties: true,
         });
@@ -95,6 +97,7 @@ export const login = catchAsyncErrorHandler(
         const user = await userRepository.findOne({
             where: { email },
         });
+        console.log("User found:", user);
         if (!user) {
             next(
                 new ErrorHandler(
@@ -131,6 +134,7 @@ export const login = catchAsyncErrorHandler(
                 sameSite: "none",
                 path: "/",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
+                domain: process.env.COOKIE_DOMAIN
             }).status(200).json({
                 success: true,
                 token,

@@ -4,15 +4,15 @@ import { DataSource } from "typeorm";
 export const AppDataSource = new DataSource({
     type: "postgres",
     url: process.env.DATABASE_URL,
-    synchronize: false,
+    synchronize: true,
     logging: false,
-    entities: ["dist/models/*.js"],
-    migrations: ["dist/migrations/*.js"],
-    // entities: ["src/models/*.ts"],
-    // migrations: ["src/migrations/*.ts"],
+    // entities: ["dist/models/*.js"],
+    // migrations: ["dist/migrations/*.js"],
+    entities: ["src/models/*.ts"],
+    migrations: ["src/migrations/*.ts"],
     subscribers: [],
     ssl: {
-        rejectUnauthorized: true
+        rejectUnauthorized: false
     },
 })
 
