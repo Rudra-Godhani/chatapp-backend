@@ -19,6 +19,8 @@ app.use(
         origin: [process.env.FRONTEND_URL as string],
         methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true,
+        allowedHeaders: ["Content-Type", "Authorization"],
+        exposedHeaders: ["set-cookie"]
     })
 )
 

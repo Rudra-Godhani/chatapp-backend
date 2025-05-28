@@ -133,8 +133,7 @@ export const login = catchAsyncErrorHandler(
                 secure: true,
                 sameSite: "none",
                 path: "/",
-                maxAge: 7 * 24 * 60 * 60 * 1000,
-                domain: process.env.COOKIE_DOMAIN
+                maxAge: 7 * 24 * 60 * 60 * 1000
             }).status(200).json({
                 success: true,
                 token,

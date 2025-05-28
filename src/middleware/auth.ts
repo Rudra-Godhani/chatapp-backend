@@ -16,6 +16,8 @@ export const isAuthenticated = catchAsyncErrorHandler(
         res: Response,
         next: NextFunction
     ): Promise<void> => {
+        console.log('Cookies received:', req.cookies);
+        console.log('Headers received:', req.headers);
         const { token } = req.cookies;
         if (!token) {
             next(new ErrorHandler("User is not authenticated.", 401));
