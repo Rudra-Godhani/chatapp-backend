@@ -74,13 +74,11 @@ export const register = catchAsyncErrorHandler(
 export const login = catchAsyncErrorHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { email, password } = req.body;
-        console.log("Login request received:", { email, password });
 
         const userToValidate = userRepository.create({
             email,
             password,
         });
-        console.log("User to validate:", userToValidate);
         const validationErrors = await validate(userToValidate, {
             skipMissingProperties: true,
         });
@@ -97,7 +95,6 @@ export const login = catchAsyncErrorHandler(
         const user = await userRepository.findOne({
             where: { email },
         });
-        console.log("User found:", user);
         if (!user) {
             next(
                 new ErrorHandler(

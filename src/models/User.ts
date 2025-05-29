@@ -40,18 +40,6 @@ export class User {
     @IsNotEmpty({ message: "Password is required." })
     password!: string;
 
-    @Column({ type: "bigint", nullable: true })
-    @Length(10, 10, { message: "Phone number must be exactly 10 digits long." })
-    @IsOptional()
-    phoneNumber!: number;
-
-    @Column({ type: "jsonb", default: { public_id: "", url: "" } })
-    @IsOptional()
-    profileImage!: {
-        public_id: string;
-        url: string;
-    };
-
     @Column({ nullable: true })
     @IsOptional()
     token!: string;
