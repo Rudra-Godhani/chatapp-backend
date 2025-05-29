@@ -129,11 +129,12 @@ export const login = catchAsyncErrorHandler(
             const { password: _, ...userWithoutPassword } = user;
 
             res.cookie("token", token, {
-                httpOnly: false,
-                secure: true,
-                sameSite: "none",
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 path: "/",
-                maxAge: 7 * 24 * 60 * 60 * 1000
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+                domain: process.env.COOKIE_DOMAIN || undefined
             }).status(200).json({
                 success: true,
                 token,
