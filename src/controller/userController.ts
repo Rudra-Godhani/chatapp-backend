@@ -126,7 +126,7 @@ export const login = catchAsyncErrorHandler(
             const { password: _, ...userWithoutPassword } = user;
 
             res.cookie("token", token, {
-                httpOnly: true,
+                httpOnly: false,
                 secure: true,
                 sameSite: "none",
                 path: "/",

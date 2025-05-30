@@ -41,9 +41,8 @@ const userRepository = AppDataSource.getRepository(User);
 const userSocketMap = new Map<string, string>();
 
 io.on("connection", (socket) => {
-    console.log(`****************************Connected: ${socket.id}`);
-
     socket.on("userConnect", async (userId: string) => {
+        console.log("User connected:", socket.id);
         if (userId) {
             userSocketMap.set(userId, socket.id);
 
