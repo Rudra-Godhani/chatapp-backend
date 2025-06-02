@@ -16,6 +16,9 @@ export class Message {
     @Column()
     content!: string;
 
+    @Column({default: false})
+    seen!: boolean;
+
     @CreateDateColumn({ type: "timestamp" })
     createdAt!: Date;
 }
