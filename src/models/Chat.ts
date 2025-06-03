@@ -7,10 +7,10 @@ export class Chat {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
-    @ManyToOne(() => User, { eager: true, cascade: true })
+    @ManyToOne(() => User, { eager: true, onDelete: "CASCADE" })
     user1!: User;
 
-    @ManyToOne(() => User, { eager: true, cascade: true })
+    @ManyToOne(() => User, { eager: true, onDelete: "CASCADE" })
     user2!: User;
 
     @OneToMany(() => Message, (message) => message.chat, { cascade: true })
