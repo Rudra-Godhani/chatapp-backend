@@ -39,7 +39,6 @@ const userSocketMap = new Map<string, string>();
 
 io.on("connection", (socket) => {
     socket.on("userConnect", async (userId: string) => {
-        console.log("User connected:", socket.id);
         if (userId) {
             userSocketMap.set(userId, socket.id);
 
@@ -78,7 +77,6 @@ io.on("connection", (socket) => {
     });
     
     socket.on("markMessagesSeen", async ({ chatId, userId }) => {
-        console.log("---------------- markmessageseen ------------")
         await messageRepository.update(
             {
                 chat: { id: chatId },
@@ -115,8 +113,20 @@ io.on("connection", (socket) => {
         socket.to(chatId).emit("stopTyping", { userId });
     });
 
+    socket.on("userLogout", async (userId: string) => {
+        if (userId) {
+            await userRepository.update(
+                { id: userId },
+                { online: false }
+            );
+
+            userSocketMap.delete(userId);
+
+            io.emit("userStatus", { userId, online: false });
+        }
+    });
+
     socket.on("disconnect", async () => {
-        console.log("User disconnected:", socket.id);
         let userId: string | undefined;
         for (const [id, socketId] of userSocketMap.entries()) {
             if (socketId === socket.id) {
