@@ -18,14 +18,12 @@ const PORT = process.env.PORT || 6000;
 app.use(
     cors({
         origin: process.env.NODE_ENV === 'production'
-            ? [process.env.FRONTEND_URL as string]
-            : ['http://localhost:3000'],
+            ? process.env.FRONTEND_URL as string
+            : 'http://localhost:3000',
         methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true,
         allowedHeaders: ["Content-Type", "Authorization"],
         exposedHeaders: ["set-cookie"],
-        preflightContinue: false,
-        optionsSuccessStatus: 204
     })
 )
 

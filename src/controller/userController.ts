@@ -146,7 +146,14 @@ export const login = catchAsyncErrorHandler(
 
 export const logout = catchAsyncErrorHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        res.clearCookie("token");
+        console.log("Logout called, clearing token cookie");
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            path: "/",
+        });
+        console.log("Cookie cleared, sending response");
         res.status(200).json({
             success: true,
             message: "User Logged out successfully",
