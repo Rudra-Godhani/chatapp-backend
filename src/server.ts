@@ -72,7 +72,7 @@ io.on("connection", (socket) => {
                 relations: ["sender", "chat"]
             });
 
-            socket.to(chatId).emit("messagesSeen",updatedMessages);
+            io.to(chatId).emit("messagesSeen",updatedMessages);
         }
     });
     
@@ -91,7 +91,7 @@ io.on("connection", (socket) => {
             relations: ["sender", "chat"]
         });
 
-        socket.to(chatId).emit("messagesSeen", updatedMessages);
+        io.to(chatId).emit("messagesSeen", updatedMessages);
     });
 
     socket.on("sendMessage", async ({ chatId, senderId, content }) => {

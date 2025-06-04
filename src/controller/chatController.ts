@@ -39,13 +39,17 @@ export const startChat = catchAsyncErrorHandler(async (req: Request, res: Respon
     });
 })
 
-// Get all chats for a user
 export const getUserChats = catchAsyncErrorHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { userId } = req.params;
 
     const chats = await chatRepository.find({
         where: [{ user1: { id: userId } }, { user2: { id: userId } }],
-        relations: ["user1", "user2", "messages"]
+        relations: ["user1", "user2", "messages"],
+        order: {
+            messages: {
+                createdAt: "ASC"
+            }
+        }
     });
     res.status(200).json({ success: true, chats });
 })
