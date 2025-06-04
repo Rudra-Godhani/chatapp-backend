@@ -51,6 +51,7 @@ export class Init1747990746236 implements MigrationInterface {
                 CREATE TABLE "message" (
                     "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
                     "content" character varying NOT NULL,
+                    "seen" boolean NOT NULL DEFAULT false,
                     "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                     "chatId" uuid,
                     "senderId" uuid,

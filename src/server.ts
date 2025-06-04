@@ -88,7 +88,7 @@ io.on("connection", (socket) => {
 
         const updatedMessages = await messageRepository.find({
             where: { chat: { id: chatId } },
-            relations: ["sender", "chat"]
+            relations: ["sender", "chat", "chat.user1", "chat.user2"]
         });
 
         io.to(chatId).emit("messagesSeen", updatedMessages);
