@@ -72,7 +72,7 @@ io.on("connection", (socket) => {
                 relations: ["sender", "chat"]
             });
 
-            io.to(chatId).emit("messagesSeen",updatedMessages);
+            socket.to(chatId).emit("messagesSeen",updatedMessages);
         }
     });
     
@@ -91,7 +91,7 @@ io.on("connection", (socket) => {
             relations: ["sender", "chat"]
         });
 
-        io.to(chatId).emit("messagesSeen", updatedMessages);
+        socket.to(chatId).emit("messagesSeen", updatedMessages);
     });
 
     socket.on("sendMessage", async ({ chatId, senderId, content }) => {
@@ -155,7 +155,6 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/chat", chatRoutes);
 
 const startServer = async () => {
-    // connect to database
     await databaseConnection();
 };
 
