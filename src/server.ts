@@ -68,15 +68,19 @@ io.on("connection", (socket) => {
             );
 
             const updatedMessages = await messageRepository.find({
-                where:{ chat: {id:chatId}},
-                relations: ["sender", "chat"]
+                where: { chat: { id: chatId } },
+                relations: ["sender", "chat", "chat.user1", "chat.user2"],
+                order: {
+                    createdAt: "ASC"
+                }
             });
 
-            io.to(chatId).emit("messagesSeen",updatedMessages);
+            io.to(chatId).emit("messagesSeen", updatedMessages);
         }
     });
     
     socket.on("markMessagesSeen", async ({ chatId, userId }) => {
+        // Mark messages as seen
         await messageRepository.update(
             {
                 chat: { id: chatId },
@@ -86,11 +90,16 @@ io.on("connection", (socket) => {
             { seen: true }
         );
 
+        // Fetch all messages with complete relations
         const updatedMessages = await messageRepository.find({
             where: { chat: { id: chatId } },
-            relations: ["sender", "chat", "chat.user1", "chat.user2"]
+            relations: ["sender", "chat", "chat.user1", "chat.user2"],
+            order: {
+                createdAt: "ASC"
+            }
         });
 
+        // Emit updated messages to all users in the chat
         io.to(chatId).emit("messagesSeen", updatedMessages);
     });
 

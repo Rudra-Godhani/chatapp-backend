@@ -44,7 +44,7 @@ export const getUserChats = catchAsyncErrorHandler(async (req: Request, res: Res
 
     const chats = await chatRepository.find({
         where: [{ user1: { id: userId } }, { user2: { id: userId } }],
-        relations: ["user1", "user2", "messages"],
+        relations: ["user1", "user2", "messages", "messages.sender"],
         order: {
             messages: {
                 createdAt: "ASC"
