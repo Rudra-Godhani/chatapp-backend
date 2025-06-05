@@ -57,7 +57,9 @@ io.on("connection", (socket) => {
             ([_, socketId]) => socketId === socket.id
         )?.[0];
 
+        console.log(`server User joined 1`);
         if (userId) {
+            console.log(`server User joined 2`);
             await messageRepository.update(
                 {
                     chat: { id: chatId },
@@ -75,11 +77,14 @@ io.on("connection", (socket) => {
                 }
             });
 
+            console.log(`server User joined 3: updatedMessages`, updatedMessages);
+
             io.to(chatId).emit("messagesSeen", updatedMessages);
         }
     });
     
     socket.on("markMessagesSeen", async ({ chatId, userId }) => {
+        console.log(`server markMessagesSeen event called`);
         // Mark messages as seen
         await messageRepository.update(
             {
@@ -99,6 +104,7 @@ io.on("connection", (socket) => {
             }
         });
 
+        console.log(`server markMessagesSeen event updatedMessages`, updatedMessages);
         // Emit updated messages to all users in the chat
         io.to(chatId).emit("messagesSeen", updatedMessages);
     });
