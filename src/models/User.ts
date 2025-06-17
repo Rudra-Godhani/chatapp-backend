@@ -12,7 +12,9 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
+    OneToMany,
 } from "typeorm";
+import { AiChat } from "./AiChat";
 
 @Entity()
 export class User {
@@ -52,4 +54,7 @@ export class User {
 
     @UpdateDateColumn({ type: "timestamp" })
     updatedAt!: Date;
+
+    @OneToMany(() => AiChat, aiChat => aiChat.user)
+    aiChats!: AiChat[];
 }

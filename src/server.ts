@@ -6,6 +6,7 @@ import { AppDataSource, databaseConnection } from "./config/databaseConnection";
 import { errorMiddleware } from "./middleware/errorHandler";
 import userRoutes from "./routes/userRoutes";
 import chatRoutes from "./routes/chatRoutes";
+import aiChatRoutes from "./routes/aiChatRoutes";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import { Message } from "./models/Message";
@@ -168,6 +169,7 @@ app.use(cookieParser());
 
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/chat", chatRoutes);
+app.use("/api/v1/ai", aiChatRoutes);
 
 const startServer = async () => {
     await databaseConnection();
